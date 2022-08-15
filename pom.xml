@@ -1,77 +1,38 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.mycorp.project</groupId>
-  <artifactId>project</artifactId>
-  <packaging>war</packaging>
+  <groupId>org.openjfx</groupId>
+  <artifactId>hellofx</artifactId>
+  <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>Sample Maven Webapp</name>
-  <url>http://www.example.com</url>
-  <build>
-    <filters>
-      <filter>src/main/resources/env/${env}.properties</filter>
-    </filters>
-    <!-- Filter other resources to the java directory -->
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>*.properties</include>
-          <include>*.xml</include>
-        </includes>
-      </resource>
-    </resources>
-    <finalName>project</finalName>  
-  </build>
+  <name>demo</name>
+  <url>http://maven.apache.org</url>
 
   <properties>
-    <!-- default environment -->
-    <env>dev</env>
-    <!-- Set default encoding to UTF-8 -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <javafx.version>17.0.1</javafx.version>
+    <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
   </properties>
 
-  <!-- environment definitions  -->
-  <profiles>
-    <profile>
-      <id>dev</id>
-      <properties>
-        <env>dev</env>
-      </properties>
-    </profile>
-    <profile>
-      <id>qa</id>
-      <properties>
-        <env>qa</env>
-      </properties>
-    </profile>
-    <profile>
-      <id>prod</id>
-      <properties>
-        <env>prod</env>
-      </properties>
-    </profile>
-  </profiles>
-
-  <!-- Create a local repo so we can distribute jars without using the system scope -->
-  <!-- http://blog.dub.podval.org/2010/01/maven-in-project-repository.html -->
-  <repositories>
-    <repository>
-      <id>lib</id>
-      <name>lib</name>
-      <releases>
-        <enabled>true</enabled>
-        <checksumPolicy>ignore</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <url>file://${project.basedir}/lib</url>
-    </repository>
-  </repositories>
-
   <dependencies>
-    <!-- dependencies here -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>${javafx.version}</version>
+    </dependency>
   </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>${javafx.maven.plugin.version}</version>
+        <configuration>
+          <mainClass>HelloFX</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
 </project>
