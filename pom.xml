@@ -1,56 +1,77 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.mycorp.project</groupId>
+  <artifactId>project</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>Sample Maven Webapp</name>
+  <url>http://www.example.com</url>
+  <build>
+    <filters>
+      <filter>src/main/resources/env/${env}.properties</filter>
+    </filters>
+    <!-- Filter other resources to the java directory -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>*.properties</include>
+          <include>*.xml</include>
+        </includes>
+      </resource>
+    </resources>
+    <finalName>project</finalName>  
+  </build>
 
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>dev-guide-wsdl-first-war</artifactId>
-    <name>-- Service WAR file</name>
-    <packaging>war</packaging>
-    <url>http://maven.apache.org</url>
+  <properties>
+    <!-- default environment -->
+    <env>dev</env>
+    <!-- Set default encoding to UTF-8 -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
-    <parent>
-        <groupId>org.talend.cxf-examples.dev-guide-wsdl-first</groupId>
-        <artifactId>dev-guide-wsdl-first</artifactId>
-        <version></version>
-    </parent>
+  <!-- environment definitions  -->
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <properties>
+        <env>dev</env>
+      </properties>
+    </profile>
+    <profile>
+      <id>qa</id>
+      <properties>
+        <env>qa</env>
+      </properties>
+    </profile>
+    <profile>
+      <id>prod</id>
+      <properties>
+        <env>prod</env>
+      </properties>
+    </profile>
+  </profiles>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.talend.cxf-examples.dev-guide-wsdl-first</groupId>
-            <artifactId>dev-guide-wsdl-first-service</artifactId>
-            <version></version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-    </dependencies>
+  <!-- Create a local repo so we can distribute jars without using the system scope -->
+  <!-- http://blog.dub.podval.org/2010/01/maven-in-project-repository.html -->
+  <repositories>
+    <repository>
+      <id>lib</id>
+      <name>lib</name>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>file://${project.basedir}/lib</url>
+    </repository>
+  </repositories>
 
-    <build>
-        <plugins>
-            <plugin>
-               <groupId>org.apache.tomcat.maven</groupId>
-               <artifactId>tomcat7-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
-                <configuration>
-                    <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-                    <webResources>
-                        <resource>
-                            <directory>../service/src/main/resources</directory>
-                            <targetPath>WEB-INF/wsdl</targetPath>
-                            <includes>
-                                <include>*.wsdl</include>
-                            </includes>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
-        </plugins>
-        <!-- Name of the generated WAR file -->
-        <finalName>doubleit</finalName>
-    </build>
-
+  <dependencies>
+    <!-- dependencies here -->
+  </dependencies>
 </project>
