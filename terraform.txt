@@ -1,0 +1,77 @@
+provider "aws" {
+    region = "us-east-1"
+}
+
+resource "aws_instance" "first_ec2" {
+    ami = "<ami_id>"
+    subnet_id = "<subnet_id>"
+    instance_type = "t2.medium"
+    tags = {
+        Name = "first_ec2"
+    }
+}
+
+pipeline {
+    agent { label 'slave' }
+    tools {
+        maven 'maven3'
+        jdk 'java17'
+    }
+
+    environment {
+        APP_NAME = 'ekart'
+        IMAGE_VERSION = "1.4"
+        DOCKER_USER = "shivabogem"
+        DOCKER_PASS = "dockerpwd"
+        IMAGE_NAME = "${DOCKER_USER}" + "/" + "${ekart}"
+        IMAGE_TAG = 
+    }
+
+    stages {
+        stage('git checkout') {
+            steps {
+                <git_checkout_scm_branch>
+            }
+        }
+
+        stage('testing') {
+            steps {
+                script {
+                    sh 'mvn test'
+                }
+            }
+        }
+
+        stage('Build target') {
+            steps {
+                script {
+                    sh 'mvn package'
+                }
+            }
+        }
+
+        stage('sonarqube analysis') {
+            steps {
+                script {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+
+        stage('deploy artifacts') {
+            steps {
+                script {
+                    sh 'mvn deploy'
+                }
+            }
+        }
+
+        stage('build docker image') {
+            steps {
+                script {
+
+                }
+            }
+        }
+    }
+}
